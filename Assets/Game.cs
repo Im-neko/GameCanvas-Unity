@@ -135,14 +135,4 @@ public sealed class Game : GameBase
             gc.DrawCenterString("Clear!", 100, 230);
         }
     }
-
-    int countBlock(){
-        int num = 0;
-        for(int i =0 ; i < BLOCK_NUM ; i ++ ){
-            if(block_alive_flag[i]){
-            num++;
-            }
-        }
-        return num;
-    }
 }
