@@ -22,6 +22,8 @@ public sealed class Game : GameBase
     int player_w = 32;
     int player_h = 32;
     int player_img = 4;
+    int player_col = 4;
+    int combo = 0;
     int score = 0;
     int time = 1800;
 
@@ -49,14 +51,25 @@ public sealed class Game : GameBase
         for(int i =0 ; i < BALL_NUM ; i ++ )
         {
             ball_y[i] = ball_y[i] + ball_speed[i];
-
             if(gc.CheckHitRect(ball_x[i], ball_y[i], ball_w, ball_h, player_x, player_y, player_w, player_h)){
+                if(player_col == ball_col[i]) {
+                    combo++;
+                    score += combo;
+                }
+                else {
+                    combo = 0;
+                }
                 if(time > 0){
                     score += ball_col[i];
                 }
+                player_col = ball_col[i];
+                resetBall(i);
+            }
+            if (ball_y[i] > 480) {
                 resetBall(i);
             }
         }
+
         if(gc.GetPointerFrameCount(0) > 0 ){
             if(gc.GetPointerX(0) > 320) {
                 player_x += player_speed;  
@@ -78,6 +91,14 @@ public sealed class Game : GameBase
         for(int i =0 ; i < BALL_NUM ; i ++ ){
             gc.DrawImage(ball_col[i],ball_x[i],ball_y[i]);  
         }
+        if(time > 0){
+            int u = 32+ ((time%60)/30)*32;
+            int v = (player_col - 1) *32;
+            DrawClipImage(player_img,player_x,player_y, u,v,32,32);
+        }
+        else {
+            DrawClipImage(player_img,player_x,player_y, 96,(player_col - 1) *32,32,32);
+        }
         gc.SetColor(0,0,0);
         if(time > 0){
               gc.DrawString("time:"+time,0,0);
@@ -86,6 +107,7 @@ public sealed class Game : GameBase
               gc.DrawString("finished!!",0,0);
         }
         gc.DrawString("score:"+score,0,24);
+        gc.DrawString("combo:"+combo,0,48);
     }
 
     void resetBall(int id){
