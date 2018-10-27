@@ -17,6 +17,8 @@ MonoBehaviour:
   - img0
   - img1
   - img2
+  - img4
+  - img5
   VideoClips: []
   AudioClips:
   - {fileID: 8300000, guid: 1de15e589d7a8b34390587825cc89503, type: 3}
