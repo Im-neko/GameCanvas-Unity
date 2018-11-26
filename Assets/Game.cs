@@ -28,6 +28,8 @@ public sealed class Game : GameBase
     int score = 0;
     int count = 0;
     string str = "";
+    string title = "Title";
+    string resultMsg = "GameOver";
 
 
 
@@ -98,7 +100,7 @@ public sealed class Game : GameBase
 
         gc.SetColor(0, 0, 0);
         if (gameState == 0) {
-            gc.DrawString("Title", 0, 300);
+            gc.DrawString(title, 0, 300);
         } else if (gameState == 1) {
             gc.DrawString("score" + score, 0, 10);
             gc.DrawOnlineImage("http://web.sfc.keio.ac.jp/~wadari/sdp/k07_web/Player.png",player_x,player_y);
