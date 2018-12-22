@@ -9,6 +9,10 @@ public sealed class Game : GameBase
 {
     // 変数の宣言
     int sec = 0;
+    int camera_id;
+    string camera_name;
+    int player_speed = 3;
+    int active_box_num = 0;
 
     /// <summary>
     /// 初期化処理
@@ -17,6 +21,10 @@ public sealed class Game : GameBase
     {
         // キャンバスの大きさを設定します
         gc.SetResolution(720, 1280);
+        gc.SetResolution(640, 480);
+        camera_id = 0;
+        camera_name = gc.GetCameraDeviceName(camera_id);
+        gc.StartCameraService(camera_id);
     }
 
     /// <summary>
@@ -26,6 +34,21 @@ public sealed class Game : GameBase
     {
         // 起動からの経過時間を取得します
         sec = (int)gc.TimeSinceStartup;
+        if (gc.GetPointerFrameCount(0) ==1 ){
+            camera_id++;
+            if (camera_id >= gc.CameraDeviceCount) camera_id= 0;
+            camera_name = gc.GetCameraDeviceName(camera_id);
+            gc.StartCameraService(camera_id);
+        }
+
+        active_box_num = 5 + count/600;
+        if(active_box_num > BOX_NUM){
+              active_box_num = BOX_NUM;
+        }
+        for(int i = 0;i < active_box_num; i++ ){
+          //繰り返す内容（箱を動かす、プレイヤーとの接触判定）
+
+        }
     }
 
     /// <summary>
@@ -33,17 +56,9 @@ public sealed class Game : GameBase
     /// </summary>
     public override void DrawGame()
     {
-        // 画面を白で塗りつぶします
         gc.ClearScreen();
-
-        // 0番の画像を描画します
-        gc.DrawImage(0, 0, 0);
-
-        // 黒の文字を描画します
-        gc.SetColor(0, 0, 0);
-        gc.SetFontSize(48);
-        gc.DrawString("この文字と青空の画像が", 40, 160);
-        gc.DrawString("見えていれば成功です", 40, 270);
-        gc.DrawRightString($"{sec}s", 630, 10);
+        gc.DrawScaledRotateCameraImage(100, 100, 25, 25, gc.CurrentCameraRotation);
+        gc.DrawScaledRotateCameraImage(player_x,player_y,5,7,gc.CurrentCameraRotation);
+        gc.DrawString(camera_name, 15, 15);
     }
 }
